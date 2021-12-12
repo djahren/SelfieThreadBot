@@ -1,0 +1,19 @@
+{
+  "name": "selfie_thread_bot",
+  "version": "1.0.0",
+  "description": "a discord bot to create a thread when a picture is posted",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "test": "nodemon bot.js"
+  },
+  "author": "Ahren Bader-Jarvis",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^13.3.1",
+    "mongoose": "^6.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
