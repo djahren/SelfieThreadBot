@@ -4,6 +4,7 @@ A Discord chat bot that creates a thread whenever an image is shared (in specifi
 
 - [Installation](#installation)
 - [Usage/Commands](#usagecommands)
+- [Bug Reports](#bug-reports)
 - [Licence](#license)
 - [Support](#support)
 
