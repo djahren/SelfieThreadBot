@@ -74,6 +74,22 @@ async function registerCommands(guildId){
 	});
 }
 
+async function checkForRogueGuilds(){
+	const guildsInDb = await GuildDB.find();
+	const guildIdsInDb = [];
+	guildsInDb.forEach((guildInDb) => {
+		guildIdsInDb.push(guildInDb.guildId)
+	})
+	const clientGuilds = client.guilds.cache
+	clientGuilds.forEach((clientGuild) => {
+		if(guildIdsInDb.indexOf(clientGuild.id) == -1){
+			//guild in client but not in db
+			addGuildToDb(clientGuild)
+			registerCommands(clientGuild.id)
+		}
+	})
+}
+
 async function logGuildsInDb(){
 	const currentGuilds = await GuildDB.find();
 	currentGuilds.forEach((guild) => {
@@ -106,6 +122,7 @@ client.on('interactionCreate', async interaction => {
 //EVENT RESPONSES
 client.once('ready', async () => {
 	console.log('Ready!');
+	checkForRogueGuilds();
 });
 
 //create threads for any message with an attachment in watched threads.
