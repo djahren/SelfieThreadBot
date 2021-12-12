@@ -6,7 +6,7 @@ const GuildDB = require('./models/guild')
 const fs = require('fs');
 
 //SETUP
-mongoose.connect('mongodb://localhost/guilds')
+mongoose.connect('mongodb://mongo:27017/guilds')
 const db = mongoose.connection
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 // client.commands = new Collection(); //global commands
@@ -129,7 +129,9 @@ client.on("messageCreate", async message => {
 			autoArchiveDuration: guildFromDb.autoArchiveDuration || 1440,
 			startMessage: message,
 		})
-		.then(threadChannel => console.log(`Created ${threadChannel.name}.`))
+		.then(threadChannel => {
+			console.log(`Created thread in #${message.channel.name}: ${threadChannel.name}.`)
+		})
 		.catch(console.error);
 	}
 })
@@ -155,3 +157,7 @@ db.once('open', () => {
 
 db.on('error', (error) => console.error(error))
 client.login(token);
+
+//log out of Discord when container stopped
+process.on('SIGINT', () => client.destroy());
+process.on('SIGTERM', () => client.destroy());

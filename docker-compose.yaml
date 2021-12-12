@@ -1,8 +1,14 @@
+version: '3'
 services:
-  db:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    container_name: db
+  app:
+    container_name: selfie-thread-bot
+    restart: always
+    build: .
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    restart: always
+    image: mongo
     volumes: 
-      - /data/db
+      - /data/mongo
