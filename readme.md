@@ -18,13 +18,14 @@ Pre-requisites: You must have [Docker](https://docs.docker.com/get-docker/) and 
     2. Click on the Bot section and select Add Bot.
     3. Copy your token, and *add it to the downloaded auth.json file*, between the two quotes.
     4. Click on OAuth2 then URL Generator.
-    5. Select `bot` and `applications.commands` under Scope. No bot permissions are needed.
+    5. Select `bot` and `applications.commands` under [Scope](https://raw.githubusercontent.com/djahren/SelfieThreadBot/master/docs/images/scope.png). No bot permissions are needed.
     NOTE: SelfieThreadBot will allow access to admin commands for the highest role on your server. You may want check your roles before the next step to make sure the top role is an admininistrative only role. 
     7. Copy the link at the bottom of the page, paste it into a new window and add it to a Discord server you are an admin on. 
     8. The bot should appear in your server as offline. 
 3. In a command prompt/terminal window navigate to the directory where you saved the bot.
 4. Run `docker-compose up` to check if the bot is functioning properly. 
-5. If all looks good, press `CTRL + C` on your keyboard twice, then once the bot has stopped, run `docker-compose up -d` to run the bot in detached mode (in the background).
+5. If the bot comes online and there are no errors, press `CTRL + C` on your keyboard twice to stop the bot. 
+6. Once the bot has stopped, run `docker-compose up -d` to run the bot in detached mode (in the background).
 
 ## Usage/Commands
 ### How It Works
@@ -36,7 +37,7 @@ When SelfieThreadBot is added to a server, it assigns permission to run admin co
 ### Everybody Commands
 - `/listselfiechannels` will list all channels that SelfieThreadBot will automatically create threads in when media is shared.
 ### A Few Extra Notes
-- If you'd like to add SelfieThreadBot to a channel that has custom permissions (that the @everyone role can't see/participate in) you need to give the SelfieThreadBot role specific access to view that channel.
+- If you'd like to add SelfieThreadBot to a channel that has custom permissions (that the `@everyone` role can't see/participate in) you need to give the SelfieThreadBot role specific access to view that channel.
 - SelfieThreadBot can opperate on one or more Discord servers/guilds at once. 
 - If SelfieThreadBot is kicked from a server any watched channels will be removed as well as thread archive settings.
 ## Bug Reports
