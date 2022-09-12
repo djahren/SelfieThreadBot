@@ -172,8 +172,10 @@ db.once('open', () => {
 });
 
 db.on('error', (error) => console.error(error));
-client.login(token);
-
 // log out of Discord when container stopped
+// eslint-disable-next-line no-undef
 process.on('SIGINT', () => client.destroy());
+// eslint-disable-next-line no-undef
 process.on('SIGTERM', () => client.destroy());
+
+client.login(token);
