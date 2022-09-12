@@ -1,11 +1,11 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const GuildDB = require('../models/guild')
 
 module.exports = {
-	data: {
-		"name": "listselfiechannels",
-		"description": "Lists all channels which SelfieThreadBot is monitoring.",
-	},
-	isAdminCommand: false,
+	data: new SlashCommandBuilder()
+		.setName("listselfiechannels")
+		.setDescription("Lists all channels which SelfieThreadBot is monitoring.")
+		.setDMPermission(false),
 	async execute(interaction) {
 		const guildFromDb = await GuildDB.findOne({guildId: interaction.guildId})
 		if(!guildFromDb){

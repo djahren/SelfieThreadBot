@@ -1,20 +1,19 @@
-const { Constants } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { ChannelType } = require('discord-api-types/v10')
 const GuildDB = require('../models/guild')
 
 module.exports = {
-	data: {
-		"name": "removeselfiechannel",
-		"description": "Removes a channel from SelfieThreadBot\'s watch list.",
-		"options": [
-			{
-				"type": Constants.ApplicationCommandOptionTypes.CHANNEL,
-				"name": "channel",
-				"description": "The channel to remove.",
-				"required": true
-			}
-		]
-	},
-	isAdminCommand: true,
+	data: new SlashCommandBuilder()
+	.setName("removeselfiechannel")
+	.setDescription("Removes a channel from SelfieThreadBot\'s watch list.")
+	.setDefaultMemberPermissions("0")
+	.setDMPermission(false)
+	.addChannelOption((option) => (
+		option.setName("channel")
+		.setDescription("The channel to remove.")
+		.setRequired(true)
+		.addChannelTypes(ChannelType.GuildText)
+	)),
 	async execute(interaction) {
 		const channel = interaction.options.getChannel('channel');
 		const guildDbObj = await GuildDB.findOne({'guildId': interaction.guildId});

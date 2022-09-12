@@ -1,30 +1,23 @@
-const { Constants } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const GuildDB = require('../models/guild')
 
 module.exports = {
-	data: {"name": "setselfiethreadarchive",
-		"description": "Sets the number of time until a thread is archived.",
-		"options": [{
-			"type": Constants.ApplicationCommandOptionTypes.INTEGER,
-			"name": "time",
-			"description": "Can be 1 or 24 hours. If server is boosted it can be 3 or 7 days, depending on boost level.",
-			"choices": [{
-				"name": "1 hour",
-				"value": 1
-			},{
-				"name": "1 day",
-				"value": 24
-			},{
-				"name": "3 days",
-				"value": 72
-			},{
-				"name": "1 week",
-				"value": 168
-			}],
-			"required": true
-	  	}]
-	},
-	isAdminCommand: true,
+	data: new SlashCommandBuilder()
+		.setName("setselfiethreadarchive")
+		.setDescription("Sets the amount of time until a thread is archived.")
+		.setDefaultMemberPermissions("0")
+		.setDMPermission(false)
+		.addIntegerOption((option) => (
+			option.setName("time")
+			.setDescription("Can be 1 or 24 hours. If server is boosted it can be 3 or 7 days, depending on boost level.")
+			.setRequired(true)
+			.addChoices(
+				{ name: "1 hour", value: 1 },
+				{ name: "1 day", value: 24 },
+				{ name: "3 days", value: 72 },
+				{ name: "1 week", value: 168}
+			)
+		)),
 	async execute(interaction) {
 		const guildFromDb = await GuildDB.findOne({guildId: interaction.guildId})
 		if(!guildFromDb){

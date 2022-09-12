@@ -16,7 +16,7 @@ Pre-requisites: You must have [Docker](https://docs.docker.com/get-docker/) and 
 2. Setup a discord chat bot in the [Discord Developer Portal](https://discord.com/developers/applications)
     1. Create a new application and give it a name.
     2. Click on the Bot section and select Add Bot.
-    3. Copy your token, and *add it to the downloaded auth.json file*, between the two quotes.
+    3. Copy your token, and *add it to the downloaded `auth-example.json` file*, between the two quotes, and rename the file to `auth.json`.
     4. Click on OAuth2 then URL Generator.
     5. Select `bot` and `applications.commands` under [Scope](https://raw.githubusercontent.com/djahren/SelfieThreadBot/master/docs/images/scope.png). No bot permissions are needed.
     NOTE: SelfieThreadBot will allow access to admin commands for the highest role on your server. You may want check your roles before the next step to make sure the top role is an admininistrative only role. 
