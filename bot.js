@@ -38,7 +38,6 @@ async function addGuildToDb(guild) {
 	try {
 		await guildObj.save();
 		console.log('Added guild to db: ' + guild.name);
-		//	console.log(newGuild)
 	}
 	catch (err) {
 		console.error(err);
@@ -88,6 +87,7 @@ async function checkForRogueGuilds() {
 async function logGuildsInDb() {
 	const currentGuilds = await GuildDB.find();
 	currentGuilds.forEach((guild) => {
+		console.log(new Date());
 		console.log(guild.name + ' with watched channels:');
 		console.log(guild.channels);
 	});
@@ -106,8 +106,9 @@ client.on('interactionCreate', async interaction => {
 	const command = commands.find(c => c.data.name === interaction.commandName);
 	if (command) {
 		try {
+			console.debug(`Running /${interaction.commandName}`);
 			await command.execute(interaction);
-			logGuildsInDb(); // extra logging to find db clear bug
+			logGuildsInDb(); // -extra logging to find db clear bug
 			return;
 		}
 		catch (error) {
@@ -147,7 +148,7 @@ client.on('messageCreate', async message => {
 		})
 			.then(threadChannel => {
 				console.log(`Created thread in #${message.channel.name}: ${threadChannel.name}.`);
-				logGuildsInDb(); // extra logging to find db clear bug
+				logGuildsInDb(); // -extra logging to find db clear bug
 			})
 			.catch(console.error);
 	}
