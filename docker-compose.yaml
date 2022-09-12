@@ -1,13 +1,13 @@
 version: '3'
 services:
-  app:
+  selfie-thread-bot:
     container_name: selfie-thread-bot
     restart: always
     build: .
     links:
-      - mongo
-  mongo:
-    container_name: mongo
+      - stb-mongo
+  stb-mongo:
+    container_name: stb-mongo
     restart: always
     image: mongo
     volumes: 
