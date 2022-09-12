@@ -5,7 +5,6 @@ module.exports = {
 		"name": "listselfiechannels",
 		"description": "Lists all channels which SelfieThreadBot is monitoring.",
 	},
-	isAdminCommand: false,
 	async execute(interaction) {
 		const guildFromDb = await GuildDB.findOne({guildId: interaction.guildId})
 		if(!guildFromDb){

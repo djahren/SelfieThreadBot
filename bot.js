@@ -1,14 +1,17 @@
 /*jshint esversion: 8 */
-const { Client, Collection, Intents } = require('discord.js');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v10');
+const { Client, Intents } = require('discord.js');
 const { token } = require('./auth.json');
 const mongoose = require('mongoose')
 const GuildDB = require('./models/guild')
 const fs = require('fs');
 
 //SETUP
-mongoose.connect('mongodb://mongo:27017/guilds')
+mongoose.connect('mongodb://stb-mongo:27017/guilds')
 const db = mongoose.connection
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const rest = new REST({ version: '10' }).setToken(token);
 // client.commands = new Collection(); //global commands
 
 //GLOBALS
@@ -18,7 +21,7 @@ const commandData = []
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
-	commandData.push(command.data);
+	commandData.push(command.data); // .toJSON()
 	commands.push(command);
 }
 
@@ -53,25 +56,17 @@ function removeGuildFromDb(guildId){
 	})
 }
 
-async function registerCommands(guildId){
-	const guild = client.guilds.cache.get(guildId)
-	const admins = guild.roles.highest;
-	const everyone = guild.roles.everyone;
-	// client.commands.set(command.data.name, command); //global commands
-	const guildCommandMgr = guild.commands
-	const newCommands = await guildCommandMgr.set(commandData)
-	newCommands.forEach((newCommand) => {
-		const isAdminCommand = commands.find(c => c.data.name === newCommand.name).isAdminCommand;
-		if(isAdminCommand){
-			guild.commands.permissions.add({ 
-				command: newCommand.id, 
-				permissions: [
-					{id: everyone.id, type: 'ROLE', permission: false},
-					{id: admins.id, type: 'ROLE', permission: true},
-				]	
-			});
-		}
-	});
+async function registerGlobalCommands(clientId){
+	try {
+		console.log(`Started refreshing ${commandData.length} application (/) commands.`);
+		const data = await rest.put(
+			Routes.applicationCommands(clientId),
+			{ body: commandData },
+		);
+		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 async function checkForRogueGuilds(){
@@ -85,7 +80,6 @@ async function checkForRogueGuilds(){
 		if(guildIdsInDb.indexOf(clientGuild.id) == -1){
 			//guild in client but not in db
 			addGuildToDb(clientGuild)
-			registerCommands(clientGuild.id)
 		}
 	})
 }
@@ -108,20 +102,21 @@ async function loadWatchedChannelsFromDb(){
 //SLASH COMMANDS
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
-	// const command = client.commands.get(interaction.commandName); //global commands
 	const command = commands.find(c => c.data.name === interaction.commandName)
-	if (!command) return;
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
+	if (command){
+		try {
+			return await command.execute(interaction);
+		} catch (error) {
+			console.error(error);	
+		}
+	} 
+	return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 });
 
 //EVENT RESPONSES
 client.once('ready', async () => {
 	console.log('Ready!');
+	registerGlobalCommands(client.user.id);
 	checkForRogueGuilds();
 });
 
@@ -156,7 +151,7 @@ client.on("messageCreate", async message => {
 client.on("guildCreate", guild => { //joined a server
     console.log("Joined a new guild: " + guild.name);
 	addGuildToDb(guild)
-	registerCommands(guild.id)
+	// registerCommands(guild.id)
 	logGuildsInDb()
 })
 

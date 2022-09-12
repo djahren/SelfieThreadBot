@@ -14,7 +14,6 @@ module.exports = {
 			}
 		]
 	},
-	isAdminCommand: true,
 	async execute(interaction) {
 		const exclamations = ["Great","Wonderful","Fantastic","Sounds good", "Let's take a selfie"]
 		const channel = interaction.options.getChannel('channel');

@@ -14,7 +14,6 @@ module.exports = {
 			}
 		]
 	},
-	isAdminCommand: true,
 	async execute(interaction) {
 		const channel = interaction.options.getChannel('channel');
 		const guildDbObj = await GuildDB.findOne({'guildId': interaction.guildId});

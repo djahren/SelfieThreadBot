@@ -24,7 +24,6 @@ module.exports = {
 			"required": true
 	  	}]
 	},
-	isAdminCommand: true,
 	async execute(interaction) {
 		const guildFromDb = await GuildDB.findOne({guildId: interaction.guildId})
 		if(!guildFromDb){

@@ -1,4 +1,8 @@
 TODO:
+Config/Language file
+warn on adding channels that selfie bot can't see
+
+DONE:
 ✅ detect when added to a new server
 ✅ create and save config for server
 ✅ admin only slash commands for 
@@ -9,6 +13,4 @@ TODO:
 ✅ test multiple servers
 ✅ verify database based on active guilds
 ✅ Docker/DockerCompose
-Config/Language file
-consider global commands
-warn on adding channels that selfie bot can't see
+✅ consider global commands
