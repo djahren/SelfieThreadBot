@@ -4,13 +4,13 @@ const GuildDB = require('../models/guild');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("removeselfiechannel")
-		.setDescription("Removes a channel from SelfieThreadBot\'s watch list.")
-		.setDefaultMemberPermissions("0")
+		.setName('removeselfiechannel')
+		.setDescription('Removes a channel from SelfieThreadBot\'s watch list.')
+		.setDefaultMemberPermissions('0')
 		.setDMPermission(false)
 		.addChannelOption((option) => (
-			option.setName("channel")
-				.setDescription("The channel to remove.")
+			option.setName('channel')
+				.setDescription('The channel to remove.')
 				.setRequired(true)
 				.addChannelTypes(ChannelType.GuildText)
 		)),
@@ -22,7 +22,8 @@ module.exports = {
 			guildDbObj.channels.splice(channelIndex, 1);
 			await guildDbObj.save();
 			interaction.reply(`I will no longer create threads in <#${channel.id}>.`);
-		} else {
+		}
+		else {
 			interaction.reply(`I'm not currently creating threads in <#${channel.id}>.`);
 		}
 	},

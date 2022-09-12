@@ -26,7 +26,7 @@ for (const file of commandFiles) {
 
 // CORE FUNCTIONS
 async function addGuildToDb(guild) {
-	const guildExists = await GuildDB.findOne({ "guildId": guild.id });
+	const guildExists = await GuildDB.findOne({ 'guildId': guild.id });
 	if (guildExists) {
 		console.log(`Guild [${guild.name}] already in db.`);
 		return;
@@ -37,9 +37,10 @@ async function addGuildToDb(guild) {
 	});
 	try {
 		await guildObj.save();
-		console.log("Added guild to db: " + guild.name);
+		console.log('Added guild to db: ' + guild.name);
 		//	console.log(newGuild)
-	} catch (err) {
+	}
+	catch (err) {
 		console.error(err);
 	}
 }
@@ -48,7 +49,8 @@ function removeGuildFromDb(guildId) {
 	GuildDB.deleteMany({ guildId: guildId }, (err, res) => {
 		if (err) {
 			console.error(err);
-		} else {
+		}
+		else {
 			console.log(res);
 		}
 	});
@@ -62,7 +64,8 @@ async function registerGlobalCommands(clientId) {
 			{ body: commandData },
 		);
 		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
-	} catch (error) {
+	}
+	catch (error) {
 		console.error(error);
 	}
 }
@@ -85,7 +88,7 @@ async function checkForRogueGuilds() {
 async function logGuildsInDb() {
 	const currentGuilds = await GuildDB.find();
 	currentGuilds.forEach((guild) => {
-		console.log(guild.name + " with watched channels:");
+		console.log(guild.name + ' with watched channels:');
 		console.log(guild.channels);
 	});
 }
@@ -122,7 +125,7 @@ client.once('ready', async () => {
 });
 
 // create threads for any message with an attachment in watched threads.
-client.on("messageCreate", async message => {
+client.on('messageCreate', async message => {
 	const guildId = message.guildId;
 	await loadWatchedChannelsFromDb();
 	// ensure the guild is in the watched channels array
@@ -135,7 +138,7 @@ client.on("messageCreate", async message => {
 		const user = await message.guild.members.fetch(message.author.id);
 		const guildFromDb = await GuildDB.findOne({ guildId: guildId });
 		const d = new Date();
-		const threadName = "" + (d.getMonth() + 1) + "-" + d.getDate() + " " +
+		const threadName = '' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' +
 			(user.nickname || message.author.username);
 		message.channel.threads.create({
 			name: threadName,
@@ -150,14 +153,14 @@ client.on("messageCreate", async message => {
 	}
 });
 
-client.on("guildCreate", guild => { // joined a server
-	console.log("Joined a new guild: " + guild.name);
+client.on('guildCreate', guild => { // joined a server
+	console.log('Joined a new guild: ' + guild.name);
 	addGuildToDb(guild);
 	logGuildsInDb();
 });
 
-client.on("guildDelete", guild => { // removed from a server
-	console.log("Left a guild: " + guild.name);
+client.on('guildDelete', guild => { // removed from a server
+	console.log('Left a guild: ' + guild.name);
 	removeGuildFromDb(guild.id);
 	logGuildsInDb();
 });
