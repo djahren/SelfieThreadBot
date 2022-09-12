@@ -1,19 +1,19 @@
-const { Constants } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { ChannelType } = require('discord-api-types/v10')
 const GuildDB = require('../models/guild')
 
 module.exports = {
-	data: {
-		"name": "addselfiechannel",
-		"description": "Adds a channel to SelfieThreadBot's watch list.",
-		"options": [
-			{
-				"type": Constants.ApplicationCommandOptionTypes.CHANNEL,
-				"name": "channel",
-				"description": "The channel to add.",
-				"required": true
-			}
-		]
-	},
+	data: new SlashCommandBuilder()
+	.setName("addselfiechannel")
+	.setDescription("Adds a channel to SelfieThreadBot's watch list.")
+	.setDefaultMemberPermissions("0")
+	.setDMPermission(false)
+	.addChannelOption((option) => (
+		option.setName("channel")
+		.setDescription("The channel to add.")
+		.setRequired(true)
+		.addChannelTypes(ChannelType.GuildText)
+	)),
 	async execute(interaction) {
 		const exclamations = ["Great","Wonderful","Fantastic","Sounds good", "Let's take a selfie"]
 		const channel = interaction.options.getChannel('channel');

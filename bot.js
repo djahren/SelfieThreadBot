@@ -12,7 +12,6 @@ mongoose.connect('mongodb://stb-mongo:27017/guilds')
 const db = mongoose.connection
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const rest = new REST({ version: '10' }).setToken(token);
-// client.commands = new Collection(); //global commands
 
 //GLOBALS
 var watchedChannels = {} //{"1234guildID": [channelid1,channelid2]}
@@ -21,7 +20,7 @@ const commandData = []
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
-	commandData.push(command.data); // .toJSON()
+	commandData.push(command.data.toJSON());
 	commands.push(command);
 }
 
@@ -105,7 +104,9 @@ client.on('interactionCreate', async interaction => {
 	const command = commands.find(c => c.data.name === interaction.commandName)
 	if (command){
 		try {
-			return await command.execute(interaction);
+			await command.execute(interaction);
+			logGuildsInDb() // extra logging to find db clear bug
+			return
 		} catch (error) {
 			console.error(error);	
 		}
@@ -143,6 +144,7 @@ client.on("messageCreate", async message => {
 		})
 		.then(threadChannel => {
 			console.log(`Created thread in #${message.channel.name}: ${threadChannel.name}.`)
+			logGuildsInDb() // extra logging to find db clear bug
 		})
 		.catch(console.error);
 	}
